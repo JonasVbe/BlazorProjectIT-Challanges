@@ -1,0 +1,7 @@
+﻿#navbarbackground {
+    background-image: url('/images/banner-902589_1920.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 275px;
+    background-position: center;
+    z-index: 9999;
+}

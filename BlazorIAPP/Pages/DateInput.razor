@@ -1,0 +1,33 @@
+﻿@page "/dateinput"
+@using Blazored.LocalStorage
+@using System
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <h1>Date Input Page</h1>
+            <div class="form-group">
+                <label for="birthdate">Enter Your Birthdate:</label>
+                <input type="date" id="birthdate" @bind="_birthDate" class="form-control" />
+            </div>
+            <button class="btn btn-primary" @onclick="SaveBirthdate">Save</button>
+            <button class="btn btn-success" @onclick="NavigateToFunFacts">Go to Fun Facts Page</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private DateTime _birthDate;
+    [Inject] private ILocalStorageService _localStorage { get; set; }
+    [Inject] private NavigationManager _Navigation { get; set; }
+
+    private async Task SaveBirthdate()
+    {
+        await _localStorage.SetItemAsync("birthdate", _birthDate);
+    }
+
+    private void NavigateToFunFacts()
+    {
+        _Navigation.NavigateTo("/funfacts", true);
+    }
+}

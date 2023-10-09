@@ -1,0 +1,62 @@
+﻿
+
+<nav class="navbar navbar-expand-md navbar-dark justify-content-end" >
+    <div class="container-fluid" id="navbarbackground" >
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+
+                    <li class="">
+                        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                            <span class="oi oi-home" aria-hidden="true"></span> Home
+                        </NavLink>
+                    </li>
+                    @*
+
+                    </div>
+                    </div>
+                    </nav>*@
+                    <li class="">
+                        <NavLink class="nav-link" href="movies">
+                            <span class="oi oi-eye" aria-hidden="true"></span> Movies
+                        </NavLink>
+                    </li>
+                    <li class="">
+                        <NavLink class="nav-link" href="foto">
+                            <span class="oi oi-image" aria-hidden="true"></span> Toon Foto
+                        </NavLink>
+                    </li>
+                    <li class="">
+                        <NavLink class="nav-link" href="funfacts">
+                            <span class="oi oi-calendar" aria-hidden="true"></span> Fun Facts
+                        </NavLink>
+                    </li>
+                    <li class="">
+                        <NavLink class="nav-link" href="dobbelen">
+                            <span class="oi oi-euro" aria-hidden="true"></span> Dobbelen
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

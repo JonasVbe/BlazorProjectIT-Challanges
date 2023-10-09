@@ -1,0 +1,115 @@
+﻿@page "/dobbelen"
+
+<div class="container mt-4">
+    <div class="row">
+        @for (int i = 1; i <= 12; i++)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="card text-white @(IsPlayerSix(i) ? "bg-success" : "bg-secondary")">
+                    <div class="card-body">
+                        <h5 class="card-title">speler @i</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-6 align-self-center text-center">
+            <div class="alert alert-info" id="result" role="alert">@resultMessage</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-3 text-center">
+            <button type="button" class="btn btn-primary" @onclick="Play">PLAY</button>
+        </div>
+        <div class="col-3 text-center">
+            <button type="button" class="btn btn-danger" @onclick="Reset">RESET</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal component for input -->
+<div class="modal" tabindex="-1" role="dialog" style="display: @modalDisplay;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enter a Number</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="HideModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="number" class="form-control" @bind="antwoord" placeholder="Enter a number between 1 and 12">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="SetAntwoord">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="HideModal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string resultMessage = "";
+    private int count = 0;
+    private string modalDisplay = "none";
+    private int antwoord = 0;
+
+    private List<int> playersWithSix = new List<int>(); // Store players who rolled a 6
+
+    private void Play()
+    {
+        Reset();
+        ShowModal();
+    }
+
+    private void Reset()
+    {
+        count = 0;
+        resultMessage = "";
+        antwoord = 0;
+        playersWithSix.Clear(); // Clear the list of players with a 6
+    }
+
+    private void ShowModal()
+    {
+        modalDisplay = "block";
+    }
+
+    private void HideModal()
+    {
+        modalDisplay = "none";
+    }
+
+    private void SetAntwoord()
+    {
+        if (antwoord >= 1 && antwoord <= 12)
+        {
+            for (int i = 1; i <= 12; i++)
+            {
+                var d = new Random().Next(1, 7);
+
+                if (d == 6)
+                {
+                    playersWithSix.Add(i);
+                    count++;
+                }
+            }
+
+            resultMessage = $"{count} speler(s) gooide een 6.";
+
+            // Show the user if they guessed correctly.
+            resultMessage += (antwoord == count) ? " Gewonnen. Juist geraden!" : $" Oeps. {count} speler gooiden een zes. Probeer nog eens...";
+        }
+
+        HideModal();
+    }
+
+    private bool IsPlayerSix(int playerNumber)
+    {
+        // Check if the player number is in the list of players who rolled a 6
+        return playersWithSix.Contains(playerNumber);
+    }
+}

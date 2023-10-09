@@ -1,0 +1,79 @@
+﻿@page "/funfacts2"
+@using Blazored.LocalStorage
+
+
+
+<div class="container">
+    <h1>Opdracht geboortedatum FunFacts</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="result">
+                @foreach (var funFact in _funFacts)
+                {
+                    @funFact  <br>
+                }
+            </p>
+            <button class="btn btn-primary btn-lg mb-2" @onclick="ReturnToDate">Opnieuw</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _selectedDate = "";
+    private List<string> _funFacts = new List<string>();
+    [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
+    [Inject] private NavigationManager _Navigation { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Retrieve the saved birthdate from local storage
+        if (await _localStorage.ContainKeyAsync("birthdate"))
+        {
+            var serializedDate = await _localStorage.GetItemAsync<string>("birthdate");
+            if (DateTime.TryParse(serializedDate, out DateTime birthDate))
+            {
+                _selectedDate = birthDate.ToString("dd/MM/yyyy");
+                // Load fun facts based on the birthdate and add them to the list
+                LoadFunFacts(birthDate);
+            }
+        }
+    }
+
+    private void LoadFunFacts(DateTime birthDate)
+    {
+        DateTime now = DateTime.Now;
+
+        double gemJaren = 80.3; // man, vrouw 84.4
+        int ageInDays = CalculateAgeInDays(birthDate, now);
+        int nogTeLevenDagen = ageInDays - (int)(gemJaren * 365);
+
+        string gbdag = birthDate.ToString("dddd", new System.Globalization.CultureInfo("nl-BE"));
+        string formattedBirthDate = birthDate.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("nl-BE"));
+        string formattedNow = now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("nl-BE"));
+        string formattedTeLeven = now.AddDays(ageInDays).ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("nl-BE"));
+
+        _funFacts.Add($"Je bent geboren op {gbdag} {formattedBirthDate}");
+        _funFacts.Add($"Vandaag is het {formattedNow}.");
+        _funFacts.Add($"Je loopt al {ageInDays} dagen op deze wereldbol rond.");
+        _funFacts.Add($"Je zal vermoedelijk sterven op {formattedTeLeven}");
+
+    }
+
+
+
+
+
+
+
+    private int CalculateAgeInDays(DateTime birthDate, DateTime currentDate)
+    {
+        TimeSpan age = currentDate - birthDate;
+        return (int)age.TotalDays;
+    }
+
+    private void ReturnToDate()
+    {
+        _Navigation.NavigateTo("/funfacts", true);
+    }
+}

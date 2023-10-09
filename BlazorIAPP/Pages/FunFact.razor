@@ -1,0 +1,48 @@
+﻿@page "/funfacts"
+@using Blazored.LocalStorage
+@using System
+
+<div class="container">
+    <h3>Opdracht geboortedatum FunFacts</h3>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form>
+                <div class="row">
+                    <div class="col-auto mb-3">
+                        <label for="geboortedatum">Je geboortedatum</label>
+                        <input type="date" id="geboortedatum" @bind="_birthDate" format="dd/MM/yyyy" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-auto mb-3">
+                        <button class="btn btn-primary btn-lg mb-2" type="button" @onclick="ShowFunFacts">Check FunFacts</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+@code {
+    private DateTime _birthDate = new DateTime(2000, 1, 31);
+    [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
+    [Inject] private NavigationManager _Navigation { get; set; } = default!;
+
+    private async void ShowFunFacts()
+    {
+        await SaveBirthdate();
+        _Navigation.NavigateTo("/funfacts2", true);
+    }
+    private async Task SaveBirthdate()
+    {
+        await _localStorage.SetItemAsync("birthdate", _birthDate);
+    }
+
+   
+}

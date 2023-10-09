@@ -1,0 +1,62 @@
+﻿@page "/foto"
+@using Microsoft.AspNetCore.Components
+
+<h1>Oefening 2</h1>
+
+<div class="card">
+    <div class="card-header">
+        Random foto
+    </div>
+    <div class="card-body text-center">
+        <img src="@_currentImageUrl" id="foto" />
+        <br />
+        <button class="btn btn-primary mt-2" @onclick="ChangeImage">Random foto</button>
+        <div>@(new MarkupString(_log))</div>
+    </div>
+</div>
+
+@code {
+    private string[] _arrImages = new string[]
+    {
+        "images/breakfast.jpg", "images/flower.jpg", "images/flower_red.jpg",
+        "images/fontain.jpg", "images/lunch.jpg", "images/sunset.jpg"
+    };
+
+    private int _lBound = 0;
+    private int _hBound;
+    private string _log = "";
+    
+    private string _currentImageUrl;
+
+    private int _currentNumber = 0;
+
+    protected override void OnInitialized()
+    {
+        _hBound = _arrImages.Length - 1;
+        _currentNumber = randomIntFromInterval(_lBound, _hBound);
+        _currentImageUrl = _arrImages[_currentNumber];
+
+
+    }
+
+    private void ChangeImage()
+    {
+        int randomnumber;
+        _log = $"Geklikt op nieuwe random (Vorige waarde = {_currentNumber})<br>";
+
+        do
+        {
+            randomnumber = randomIntFromInterval(1, 3);
+
+        } while (randomnumber == _currentNumber);
+        _log += randomnumber + "<br />";
+        
+        _currentNumber = randomnumber;
+        _currentImageUrl = _arrImages[_currentNumber];
+    }
+
+    private int randomIntFromInterval(int min, int max)
+    {
+        return new Random().Next(min, max + 1);
+    }
+}

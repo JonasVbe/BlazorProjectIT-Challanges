@@ -1,0 +1,81 @@
+﻿@page "/funfacts3"
+
+<div class="container">
+    <h3>Opdracht geboortedatum FunFacts</h3>
+
+    @if (!_showFunFacts)
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <form>
+                    <div class="row">
+                        <div class="col-auto mb-3">
+                            <label for="geboortedatum">Je geboortedatum</label>
+                            <input type="date" id="geboortedatum" @bind="_birthDate" format="dd/MM/yyyy" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto mb-3">
+                            <button class="btn btn-primary btn-lg mb-2" type="button" @onclick="ShowFunFacts">Check FunFacts</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (_showFunFacts)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <p id="result">
+                    @foreach (var funFact in _funFacts)
+                    {
+                        @funFact  <br>
+                    }
+                </p>
+                <button class="btn btn-primary btn-lg mb-2" @onclick="ClearForm">Opnieuw</button>
+            </div>
+
+        </div>
+    }
+</div>
+
+@code {
+    private DateTime _birthDate = new DateTime(2000, 1, 31);
+    private List<string> _funFacts = new List<string>();
+    private bool _showFunFacts = false;
+
+    private void ShowFunFacts()
+    {
+
+
+        DateTime now = DateTime.Now;
+
+        int ageInDays = CalculateAgeInDays(_birthDate, now);
+
+        string gbdag = _birthDate.ToString("dddd", new System.Globalization.CultureInfo("nl-BE"));
+        string formattedBirthDate = _birthDate.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("nl-BE"));
+        string formattedNow = now.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("nl-BE"));
+        string formattedTeLeven = now.AddDays(ageInDays).ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("nl-BE"));
+
+        _funFacts.Add($"Je bent geboren op {gbdag} {formattedBirthDate}]");
+        _funFacts.Add($"Vandaag is het {formattedNow}.{Environment.NewLine}");
+        _funFacts.Add($"Je loopt al {ageInDays} dagen op deze wereldbol rond.");
+        _funFacts.Add($"Je zal vermoedelijk sterven op {formattedTeLeven}");
+        _showFunFacts = true;
+    }
+
+    private int CalculateAgeInDays(DateTime birthDate, DateTime currentDate)
+    {
+        TimeSpan age = currentDate - birthDate;
+        return (int)age.TotalDays;
+    }
+
+    private void ClearForm()
+    {
+        _birthDate = DateTime.MinValue;
+        _funFacts.Clear();
+        _showFunFacts = false;
+    }
+}
